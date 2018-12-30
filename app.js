@@ -31,9 +31,14 @@ app.use(session(
 
 app.set('SessionData', SessionData);
 
-app.use('/', (req, res) =>
+app.get('/', (req, res) =>
 {
 	res.render('layout');
+});
+
+app.get('/login', (req, res) =>
+{
+	res.render('login');
 });
 
 app.use((req, res, next) =>

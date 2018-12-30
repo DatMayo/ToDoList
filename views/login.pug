@@ -1,0 +1,32 @@
+doctype html
+html(lang='en')
+	head
+		// Required meta tags
+		meta(charset='utf-8')
+		meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+		// Bootstrap CSS
+		link(rel='stylesheet', href='/css/bootstrap.min.css')
+		link(rel='stylesheet', href='/css/login.css')
+		style.
+			.bd-placeholder-img {
+				font-size: 1.125rem;
+				text-anchor: middle;
+			}
+			@media (min-width: 768px) {
+				.bd-placeholder-img-lg {
+					font-size: 3.5rem;
+				}
+			}
+		title ToDo List - Login
+	body.text-center
+	form.form-signin
+		h1.h3.mb-3.font-weight-normal Please sign in
+		label.sr-only(for='Username') Username
+		input#Username.form-control(type='text', placeholder='Username', required='', autofocus='')
+		label.sr-only(for='inputPassword') Password
+		input#inputPassword.form-control(type='password', placeholder='Password', required='')
+		button.btn.btn-lg.btn-primary.btn-block(type='submit') Sign in
+		// Optional JavaScript
+		// jQuery first, then Popper.js, then Bootstrap JS
+		script(src='/js/jquery.min.js')
+		script(src='/js/bootstrap.min.js')
