@@ -3,6 +3,7 @@ const createError = require('http-errors');
 const express = require('express');
 const helmet = require('helmet');
 const Logger = require('./utils/Logger');
+const path = require('path');
 const session = require('express-session');
 
 const app = express();
@@ -12,7 +13,11 @@ const port = process.env.PORT || 3000;
 let SessionData = null;
 SessionData = { };
 
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
+
 app.use(helmet());
+app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyparser.urlencoded({ extended: false }));
 
 app.use(session(
@@ -25,6 +30,11 @@ app.use(session(
 ));
 
 app.set('SessionData', SessionData);
+
+app.use('/', (req, res) =>
+{
+	res.render('layout');
+});
 
 app.use((req, res, next) =>
 {
