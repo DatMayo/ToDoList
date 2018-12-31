@@ -8,8 +8,8 @@ router.get('/login', (req, res) =>
 	const SesData = req.app.get('SessionData');
 	const sid = req.session.id;
 	if(SesData[sid])
-		res.redirect('/');
-	res.render('login');
+		return res.redirect('/');
+	return res.render('login');
 });
 
 router.post('/login',
@@ -22,10 +22,10 @@ router.post('/login',
 		const SesData = req.app.get('SessionData');
 		const sid = req.session.id;
 		if(SesData[sid])
-			res.redirect('/');
+			return res.redirect('/');
 		const userName = req.sanitize(req.body.Username);
-		const password = req.sanitize(req.body.Password);
-
+		const password = req.sanitize(req.body.Password);	
+		
 		const errors = validationResult(req);
 		if(!errors.isEmpty())
 			return res.render('login', { 'ErrorMessage': errors.array(), sentUsername: userName });
@@ -49,7 +49,7 @@ router.post('/login',
 							'Username': user.username,
 						},
 					};
-					res.redirect('/');
+					return res.redirect('/');
 				});
 			});
 	});

@@ -20,8 +20,14 @@ const Accounts = connection.define('accounts',
 		username: sequelize.STRING,
 		password: sequelize.STRING,
 	});
+const Category = connection.define('category',
+	{
+		uid: sequelize.INTEGER,
+		name: sequelize.STRING,
+	});
 
 app.set('AccountSQL', Accounts);
+app.set('CategorySQL', Category);
 
 let SessionData = null;
 SessionData = { };
@@ -50,7 +56,7 @@ app.set('SessionData', SessionData);
 app.use(require('./routes/index'));
 app.use(require('./routes/login'));
 app.use(require('./routes/register'));
-
+app.use(require('./routes/category'));
 // #endregion
 
 app.use((req, res, next) =>

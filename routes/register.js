@@ -23,7 +23,7 @@ router.post('/register',
 		const SesData = req.app.get('SessionData');
 		const sid = req.session.id;
 		if(SesData[sid])
-			res.redirect('/');
+			return res.redirect('/');
 		const userName = req.sanitize(req.body.Username);
 		const passwordOne = req.sanitize(req.body.Password);
 		const passwordTwo = req.sanitize(req.body.PasswordConfirm);
