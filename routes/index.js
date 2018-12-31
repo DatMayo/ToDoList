@@ -7,6 +7,7 @@ router.get('/', (req, res) =>
 	const sid = req.session.id;
 	if(!SesData[sid])
 		res.redirect('/login');
+	res.render('index');
 });
 
 module.exports = router;

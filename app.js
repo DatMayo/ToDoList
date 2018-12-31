@@ -60,7 +60,7 @@ app.use((req, res, next) =>
 
 app.use((err, req, res, next) =>
 {
-	res.send(`<pre>${err.stack}</pre>`);
+	res.render('404');
 });
 
 connection.sync().then(() =>

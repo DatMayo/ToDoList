@@ -19,12 +19,19 @@ html(lang='en')
 			}
 		title ToDo List - Login
 	body.text-center
-	form.form-signin
+	form.form-signin(method='POST' action='/login')
+		if ErrorMessage
+			.alert.alert-warning(style='text-align: left')
+				b There was an error
+				ul(style='margin-bottom: 0')
+					each val in ErrorMessage
+						li !{val.param}, !{val.msg}
 		h1.h3.mb-3.font-weight-normal Please sign in
 		label.sr-only(for='Username') Username
-		input#Username.form-control(type='text', placeholder='Username', required='', autofocus='')
+		input#Username.form-control(type='text', placeholder='Username', name='Username', autofocus='' value=sentUsername)
 		label.sr-only(for='inputPassword') Password
-		input#inputPassword.form-control(type='password', placeholder='Password', required='')
+		input#inputPassword.form-control(type='password', placeholder='Password', name='Password')
+		br
 		button.btn.btn-lg.btn-primary.btn-block(type='submit') Sign in
 		br
 		a(href='/register') No account?
