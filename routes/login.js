@@ -24,8 +24,8 @@ router.post('/login',
 		if(SesData[sid])
 			return res.redirect('/');
 		const userName = req.sanitize(req.body.Username);
-		const password = req.sanitize(req.body.Password);	
-		
+		const password = req.sanitize(req.body.Password);
+
 		const errors = validationResult(req);
 		if(!errors.isEmpty())
 			return res.render('login', { 'ErrorMessage': errors.array(), sentUsername: userName });
