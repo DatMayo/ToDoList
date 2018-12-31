@@ -1,14 +1,27 @@
 const bodyparser = require('body-parser');
 const createError = require('http-errors');
+const expressSanitizer = require('express-sanitizer');
 const express = require('express');
 const helmet = require('helmet');
 const Logger = require('./utils/Logger');
 const path = require('path');
 const session = require('express-session');
+const sequelize = require('sequelize');
 
 const app = express();
 
 const port = process.env.PORT || 3000;
+
+const sqliteConfig = require('./config/sqlite.config.json');
+const connection = new sequelize('todo', null, null, sqliteConfig);
+
+const Accounts = connection.define('accounts',
+	{
+		username: sequelize.STRING,
+		password: sequelize.STRING,
+	});
+
+app.set('AccountSQL', Accounts);
 
 let SessionData = null;
 SessionData = { };
@@ -18,7 +31,9 @@ app.set('view engine', 'pug');
 
 app.use(helmet());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: false }));
+app.use(expressSanitizer());
 
 app.use(session(
 	{
@@ -31,15 +46,12 @@ app.use(session(
 
 app.set('SessionData', SessionData);
 
-app.get('/', (req, res) =>
-{
-	res.render('layout');
-});
+// #region Routes
+app.use(require('./routes/index'));
+app.use(require('./routes/login'));
+app.use(require('./routes/register'));
 
-app.get('/login', (req, res) =>
-{
-	res.render('login');
-});
+// #endregion
 
 app.use((req, res, next) =>
 {
@@ -51,7 +63,14 @@ app.use((err, req, res, next) =>
 	res.send(`<pre>${err.stack}</pre>`);
 });
 
-app.listen(3000, () =>
+connection.sync().then(() =>
 {
-	Logger.log(`Server started on port ${port}`);
+	Logger.log('Established SQLite connection');
+	app.listen(port, () =>
+	{
+		Logger.log(`Server started on port ${port}`);
+	});
+}).catch(err =>
+{
+	Logger.log(`There was an error: ${err}`, 'error');
 });

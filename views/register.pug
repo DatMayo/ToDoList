@@ -1,0 +1,41 @@
+doctype html
+html(lang='en')
+	head
+		// Required meta tags
+		meta(charset='utf-8')
+		meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+		// Bootstrap CSS
+		link(rel='stylesheet', href='/css/bootstrap.min.css')
+		link(rel='stylesheet', href='/css/login.css')
+		style.
+			.bd-placeholder-img {
+				font-size: 1.125rem;
+				text-anchor: middle;
+			}
+			@media (min-width: 768px) {
+				.bd-placeholder-img-lg {
+					font-size: 3.5rem;
+				}
+			}
+		title ToDo List - Registation
+	body.text-center
+	form.form-signin(method='POST' action='/register')
+		if ErrorMessage
+			.alert.alert-warning(style='text-align: left')
+				b There was an error
+				ul(style='margin-bottom: 0')
+					each val in ErrorMessage
+						li !{val.param}, !{val.msg}
+		h1.h3.mb-3.font-weight-normal Please fill all forms
+		label.sr-only(for='Username') Username
+		input#Username.form-control(type='text', placeholder='Username', name='Username', autofocus='' value=sentUsername)
+		label.sr-only(for='inputPasswordOne') Password
+		input#inputPasswordOne.form-control(type='password', placeholder='Password', name='Password')
+		label.sr-only(for='inputPasswordTwo') Confirm Password
+		input#inputPasswordTwo.form-control(type='password', placeholder='Password confirmation', name='PasswordConfirm')
+		br
+		button.btn.btn-lg.btn-primary.btn-block(type='submit' name='Register' value='Register') Register
+		// Optional JavaScript
+		// jQuery first, then Popper.js, then Bootstrap JS
+		script(src='/js/jquery.min.js')
+		script(src='/js/bootstrap.min.js')
