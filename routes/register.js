@@ -32,13 +32,31 @@ router.post('/register',
 		if(!errors.isEmpty())
 			return res.render('register', { 'ErrorMessage': errors.array(), sentUsername: userName });
 		if(passwordOne != passwordTwo)
-			return res.render('register', { 'ErrorMessage': [ { 'param': 'Password', 'msg': 'the two given passwords do not match' } ], sentUsername: userName });
+		{
+			return res.render('register', { 'ErrorMessage':
+			[
+				{
+					'param': 'Password',
+					'msg': 'the two given passwords do not match',
+				},
+			],
+			sentUsername: userName });
+		}
 		const Account = req.app.get('AccountSQL');
 		Account.findOne({ where: { 'username': userName } })
 			.then(userExists =>
 			{
 				if(userExists)
-					return res.render('register', { 'ErrorMessage': [ { 'param': 'Username', 'msg': 'the given username allready exists' } ], sentUsername: userName });
+				{
+					return res.render('register', { 'ErrorMessage':
+					[
+						{
+							'param': 'Username',
+							'msg': 'the given username allready exists',
+						},
+					],
+					sentUsername: userName });
+				}
 				const saltRounds = 10;
 				const salt = bcrypt.genSaltSync(saltRounds);
 				const hash = bcrypt.hashSync(passwordOne, salt);

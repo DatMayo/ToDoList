@@ -4,8 +4,36 @@ block content
 	h1 Your categories
 	table.table
 		thead
-			tr
-				th.col-10 Name
-				th.col-2 Option
+			tr.row
+				th.col-sm-10 Name
+				th.col-sm-2 Option
 		tbody
-			
+			if UserCategories.lenght = 0
+				tr.row
+					td.col-12(colspan='2') No categories to display
+			else
+				each item in UserCategories
+					tr.row
+						td.col-sm-10 !{item.name}
+						td.col-sm-2
+							| [
+							a(href=`/category/edit/${item.id}`) Edit
+							| ] [
+							a(href=`/category/delete/${item.id}`) Delete
+							| ]
+	br
+	if SuccessMessage
+		.alert.alert-success.alert-dismissible
+			a.close(data-dismiss='alert' aria-label='close')
+			| !{SuccessMessage}
+	if ErrorMessage
+		.alert.alert-warning(style='text-align: left')
+			b There was an error
+			ul(style='margin-bottom: 0')
+				each val in ErrorMessage
+					li !{val.param}, !{val.msg}
+	form(method='POST' action='/category')
+		.input-group.mb-3
+			input#CategoryName.form-control(type='text', placeholder='New category name', name='CategoryName', value=sentUsername)
+			.input-group-append
+				button.btn.btn-outline-secondary(type='submit') Create
