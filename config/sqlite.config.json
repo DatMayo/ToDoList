@@ -1,5 +1,6 @@
 {
 	"dialect": "sqlite",
 	"storage": "./data/db.sqlite",
-	"operatorsAliases": false
+	"operatorsAliases": false,
+	"logging": false
 }

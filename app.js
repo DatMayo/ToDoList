@@ -66,6 +66,8 @@ app.use((req, res, next) =>
 
 app.use((err, req, res, next) =>
 {
+	if(req.url != '/favicon.ico')
+		Logger.log(err.message);
 	res.render('404');
 });
 
