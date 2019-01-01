@@ -1,6 +1,6 @@
 # ToDo List
 
-This is a little tool to handle daily tasks, based ony SQLite. (Inspired by seekaplayer)
+This is a little tool to handle daily tasks, based ony SQLite. (Inspired by [seekaplayer](https://github.com/seekaplayer))
 
 # Tech
 "ToDoList" uses a number of great open source projects which are needed to run this list:
