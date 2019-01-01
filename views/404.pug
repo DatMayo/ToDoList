@@ -1,6 +1,21 @@
-extends layout
-
-block content
-	h1 404 - Not found
-	p.lead
-		| The given document could not be found
+doctype html
+html(lang='en')
+	head
+		// Required meta tags
+		meta(charset='utf-8')
+		meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+		// Bootstrap CSS
+		link(rel='stylesheet', href='/css/bootstrap.min.css')
+		title ToDo List - 404
+		script(src='/js/jquery.min.js')
+		script(src='/js/bootstrap.min.js')
+		style(type='text/css').
+			body { background: #f5f5f5; }
+			.page-wrap { min-height: 100vh;	}
+	body
+		.page-wrap.d-flex.flex-row.align-items-center
+			.container
+				.row.justify-content-center
+					.col-md-12.text-center
+						span.display-1.d-block 404
+						.mb-4.lead The page you are looking for was not found.
