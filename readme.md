@@ -17,7 +17,7 @@ This is a little tool to handle daily tasks, based ony SQLite. (Inspired by seek
 * [sanitize](https://www.npmjs.com/package/sanitize) - Input sanitizing library for node.js
 * [sanitizer](https://www.npmjs.com/package/sanitizer) - Caja's HTML Sanitizer as a Node.js module
 * [sequelize](https://www.npmjs.com/package/sequelize) - Multi dialect ORM for Node.JS
-* [sqlite3"](https://www.npmjs.com/package/sqlite3) - Asynchronous, non-blocking SQLite3 bindings
+* [sqlite3](https://www.npmjs.com/package/sqlite3) - Asynchronous, non-blocking SQLite3 bindings
 
 # What do you need
 - node js (>= 10.11)
@@ -26,9 +26,10 @@ This is a little tool to handle daily tasks, based ony SQLite. (Inspired by seek
 
 ToDo List requires [Node.js](https://nodejs.org/) v4+ to run.
 
-Install the dependencies and devDependencies and start the server.
+Install the dependencies and dev-dependencies and start the server.
 
 ```sh
+$ git clone https://github.com/GermanDevCoding/ToDoList.git
 $ cd ToDoList
 $ npm install -d
 $ node .
