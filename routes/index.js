@@ -7,7 +7,13 @@ router.get('/', (req, res) =>
 	const sid = req.session.id;
 	if(!SesData[sid])
 		return res.redirect('/login');
-	return res.render('index');
+	
+	const Category = req.app.get('CategorySQL');
+	Category.findAll({ where: { uid: SesData[sid].Account.ID }, order: ['name'] })
+			.then(UserCategories =>
+			{
+				return res.render('index', { 'UserCategories': UserCategories });
+			});
 });
 
 module.exports = router;

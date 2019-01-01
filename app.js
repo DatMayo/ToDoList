@@ -25,9 +25,16 @@ const Category = connection.define('category',
 		uid: sequelize.INTEGER,
 		name: sequelize.STRING,
 	});
+const ToDo = connection.define('todo', 
+	{
+		uid: sequelize.INTEGER,
+		name: sequelize.STRING,
+		catid: sequelize.INTEGER,
+	});
 
 app.set('AccountSQL', Accounts);
 app.set('CategorySQL', Category);
+app.set('ToDoSQL', ToDo);
 
 let SessionData = null;
 SessionData = { };

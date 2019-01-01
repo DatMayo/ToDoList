@@ -9,6 +9,7 @@ router.get('/category/:action?/:id?', (req, res) =>
 	if(!SesData[sid])
 		return res.redirect('/login');
 	const Category = req.app.get('CategorySQL');
+	// Not needed, use res.redirect instead of res.render!
 	Category.findAll({ where: { uid: SesData[sid].Account.ID }, order: ['name'] })
 		.then(UserCategories =>
 		{
@@ -44,7 +45,7 @@ router.get('/category/:action?/:id?', (req, res) =>
 		});
 });
 
-router.post('/category',
+router.post('/category/:action?/:id?',
 	[
 		check('CategoryName').isLength({ min: 3 }).trim().escape(),
 	],
@@ -54,65 +55,118 @@ router.post('/category',
 		const sid = req.session.id;
 		if(!SesData[sid])
 			return res.redirect('/login');
-
 		const Category = req.app.get('CategorySQL');
+		// Not needed, use res.redirect instead of res.render!
 		Category.findAll({ where: { uid: SesData[sid].Account.ID }, order: ['name'] })
 			.then(UserCategories =>
 			{
-
-				const newCategoryName = req.sanitize(req.body.CategoryName);
-				const errors = validationResult(req);
-				if(!errors.isEmpty())
+				const itemID = parseInt(req.params.id);
+				if(Number.isInteger(itemID))
 				{
-					return res.render('category',
-						{
-							'ErrorMessage': errors.array(),
-							'UserCategories': UserCategories,
-						});
-				}
-				Category.findOne(
+					switch(req.params.action)
 					{
-						where:
-						{
-							uid: SesData[sid].Account.ID,
-							name: newCategoryName,
-						},
-					})
-					.then(UserCategory =>
-					{
-						if(UserCategory)
-						{
-							return res.render('category',
+						case 'edit':
+							Category.findOne({ where: { name: req.body.newCatName }})
+								.then(EditedCatExists =>
 								{
-									'ErrorMessage':
-									[
+									if(EditedCatExists)
+										return res.render('category',
 										{
-											'param': 'Category',
-											'msg': 'allready exists',
+											'ErrorMessage':
+											[
+												{
+													'param': 'Category',
+													'msg': 'allready exists',
+												},
+											],
+											'UserCategories': UserCategories,
+										});
+									Category.update(
+										{
+											name: req.body.newCatName,
 										},
-									],
-									'UserCategories': UserCategories,
+										{
+											where:
+											{
+												id: itemID,
+											},
+										},
+									)
+									.then(() =>
+									{
+										Category.findAll({ where: { uid: SesData[sid].Account.ID }, order: ['name'] })
+										.then(NewUserCategories =>
+										{
+											return res.render('category',
+												{
+													'SuccessMessage': 'The given category was updated successfully',
+													'UserCategories': NewUserCategories,
+												});
+										}
+										);
+									});
 								});
-						}
-						Category.create(
+							break;
+						default:
+							return res.redirect('/category');
+					}
+				}
+				else
+				{
+					const newCategoryName = req.sanitize(req.body.CategoryName);
+					const errors = validationResult(req);
+					if(!errors.isEmpty())
+					{
+						return res.render('category',
+							{
+								'ErrorMessage': errors.array(),
+								'UserCategories': UserCategories,
+							});
+					}
+					Category.findOne(
+						{
+							where:
 							{
 								uid: SesData[sid].Account.ID,
 								name: newCategoryName,
-							})
-							.then(() =>
+							},
+						})
+						.then(UserCategory =>
+						{
+							if(UserCategory)
 							{
-								Category.findAll({ where: { uid: SesData[sid].Account.ID }, order: ['name'] })
-									.then(NewUserCategories =>
+								return res.render('category',
 									{
-										return res.render('category',
+										'ErrorMessage':
+										[
 											{
-												'SuccessMessage': 'The given category was created successfully',
-												'UserCategories': NewUserCategories,
-											});
-									}
-									);
-							});
-					});
+												'param': 'Category',
+												'msg': 'allready exists',
+											},
+										],
+										'UserCategories': UserCategories,
+									});
+							}
+							Category.create(
+								{
+									uid: SesData[sid].Account.ID,
+									name: newCategoryName,
+								})
+								.then(() =>
+								{
+									Category.findAll({ where: { uid: SesData[sid].Account.ID }, order: ['name'] })
+										.then(NewUserCategories =>
+										{
+											return res.render('category',
+												{
+													'SuccessMessage': 'The given category was created successfully',
+													'UserCategories': NewUserCategories,
+												});
+										}
+										);
+								});
+						});
+					}
 			});
 	});
 
