@@ -1,6 +1,16 @@
 extends layout
 
 block content
+	if SuccessMessage
+		.alert.alert-success.alert-dismissible
+			a.close(data-dismiss='alert' aria-label='close')
+			| !{SuccessMessage}
+	if ErrorMessage
+		.alert.alert-warning(style='text-align: left')
+			b There was an error
+			ul(style='margin-bottom: 0')
+				each val in ErrorMessage
+					li !{val.param}, !{val.msg}
 	h1 ToDo
 	table.table
 		thead
@@ -10,32 +20,46 @@ block content
 				th.col-sm-2 Created
 				th.col-sm-2 Options
 		tbody
+			if UserCategories.length == 0
+				tr.row
+					td.col-12(colspan='2') No categories to display
+			else
+				each item in ToDo
+					tr.row
+						td.col-sm-6 !{item.name}
+						td.col-sm-2 !{item.catid}
+						td.col-sm-2 !{moment(item.createdAt).format("DD.MM.YYYY")}
+						td.col-sm-2
+							button.btn.btn-outline-primary(type='button', data-toggle='modal', data-target='#EditModal', data-catid=`${item.id}`, data-catname=`${item.name}`) Edit
+							| &nbsp;
+							a.btn.btn-outline-danger(href=`/todo/delete/${item.id}`) Delete
 	button.btn.btn-primary.float-right(type='button', data-toggle='modal', data-target='#CreateToDo')
 		| New task
 
 	#CreateToDo.modal.fade(tabindex='-1', role='dialog', aria-labelledby='CreateToDoLabel', aria-hidden='true')
 		.modal-dialog(role='document')
-			.modal-content
-				.modal-header
-					h5.modal-title Create a new Task
-					button.close(type='button', data-dismiss='modal', aria-label='Close')
-						span(aria-hidden='true') ×
-				.modal-body
-					.form-group
-						label(for='taskName') What do you want to get finished
-						input#taskName(type='text', class='form-control' placeholder='Name of task', name='taskName')
-						input#catID(type='text', class='form-control', placeholder='category id', name='catID')
-					.form-group
-						label(for='dropdownCat') Select a category for your todo
-						.dropdown
-							button#dropdownMenuButton.btn.btn-secondary.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
-								| Choose from the list below
-							.dropdown-menu(aria-labelledby='dropdownMenuButton')
-								each item in UserCategories
-									a.dropdown-item(href=`JavaScript:selectItem(${item.id}, '${item.name}')`) !{item.name}
-				.modal-footer
-					button.btn.btn-secondary(type='button', data-dismiss='modal') Close
-					button.btn.btn-primary(type='button') Create
+			form(method='POST' action='/')
+				.modal-content
+					.modal-header
+						h5.modal-title Create a new Task
+						button.close(type='button', data-dismiss='modal', aria-label='Close')
+							span(aria-hidden='true') ×
+					.modal-body
+						.form-group
+							label(for='taskName') What do you want to get finished
+							input#taskName(type='text', class='form-control' placeholder='Name of task', name='taskName')
+							input#catID(type='hidden', class='form-control', placeholder='category id', name='catID')
+						.form-group
+							label(for='dropdownCat') Select a category for your todo
+							.dropdown
+								button#dropdownMenuButton.btn.btn-secondary.dropdown-toggle(type='button', data-toggle='dropdown', aria-haspopup='true', aria-expanded='false')
+									| Choose from the list below
+								.dropdown-menu(aria-labelledby='dropdownMenuButton')
+									each item in UserCategories
+										a.dropdown-item(href=`JavaScript:selectItem(${item.id}, '${item.name}')`) !{item.name}
+					.modal-footer
+						button.btn.btn-secondary(type='button', data-dismiss='modal') Close
+						button.btn.btn-primary(type='submit') Create
 	script.
 		function selectItem(id, name)
 		{

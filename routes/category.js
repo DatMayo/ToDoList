@@ -63,24 +63,35 @@ router.post('/category/:action?/:id?',
 				const itemID = parseInt(req.params.id);
 				if(Number.isInteger(itemID))
 				{
+					const errors = validationResult(req);
+					if(!errors.isEmpty())
+					{
+						return res.render('category',
+							{
+								'ErrorMessage': errors.array(),
+								'UserCategories': UserCategories,
+							});
+					}
 					switch(req.params.action)
 					{
 						case 'edit':
-							Category.findOne({ where: { name: req.body.newCatName }})
+							Category.findOne({ where: { name: req.body.newCatName } })
 								.then(EditedCatExists =>
 								{
 									if(EditedCatExists)
+									{
 										return res.render('category',
-										{
-											'ErrorMessage':
-											[
-												{
-													'param': 'Category',
-													'msg': 'allready exists',
-												},
-											],
-											'UserCategories': UserCategories,
-										});
+											{
+												'ErrorMessage':
+												[
+													{
+														'param': 'Category',
+														'msg': 'allready exists',
+													},
+												],
+												'UserCategories': UserCategories,
+											});
+									}
 									Category.update(
 										{
 											name: req.body.newCatName,
@@ -92,19 +103,18 @@ router.post('/category/:action?/:id?',
 											},
 										},
 									)
-									.then(() =>
-									{
-										Category.findAll({ where: { uid: SesData[sid].Account.ID }, order: ['name'] })
-										.then(NewUserCategories =>
+										.then(() =>
 										{
-											return res.render('category',
+											Category.findAll({ where: { uid: SesData[sid].Account.ID }, order: ['name'] })
+												.then(NewUserCategories =>
 												{
-													'SuccessMessage': 'The given category was updated successfully',
-													'UserCategories': NewUserCategories,
+													return res.render('category',
+														{
+															'SuccessMessage': 'The given category was updated successfully',
+															'UserCategories': NewUserCategories,
+														});
 												});
-										}
-										);
-									});
+										});
 								});
 							break;
 						default:
@@ -166,7 +176,7 @@ router.post('/category/:action?/:id?',
 										);
 								});
 						});
-					}
+				}
 			});
 	});
 

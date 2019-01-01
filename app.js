@@ -25,13 +25,13 @@ const Category = connection.define('category',
 		uid: sequelize.INTEGER,
 		name: sequelize.STRING,
 	});
-const ToDo = connection.define('todo', 
+const ToDo = connection.define('todo',
 	{
 		uid: sequelize.INTEGER,
 		name: sequelize.STRING,
 		catid: sequelize.INTEGER,
 	});
-
+app.locals.moment = require('moment');
 app.set('AccountSQL', Accounts);
 app.set('CategorySQL', Category);
 app.set('ToDoSQL', ToDo);
