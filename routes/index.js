@@ -18,10 +18,10 @@ router.get('/',	(req, res) =>
 				.then(ToDoData =>
 				{
 					return res.render('index',
-					{
-						'UserCategories': UserCategories,
-						'ToDo': ToDoData
-					});
+						{
+							'UserCategories': UserCategories,
+							'ToDo': ToDoData,
+						});
 				});
 		});
 });
@@ -41,61 +41,61 @@ router.post('/',
 		const ToDo = req.app.get('ToDoSQL');
 		const Category = req.app.get('CategorySQL');
 		Category.findAll({ where: { uid: SesData[sid].Account.ID }, order: ['name'] })
-		.then(UserCategories =>
-		{
-			ToDo.findAll({ where: { uid: SesData[sid].Account.ID }, order: ['name'] })
-				.then(UserCategories =>
-				{
-					const errors = validationResult(req);
-					if(!errors.isEmpty())
+			.then(UserCategories =>
+			{
+				ToDo.findAll({ where: { uid: SesData[sid].Account.ID }, order: ['name'] })
+					.then(UserCategoriesAll =>
 					{
-						return res.render('index',
-							{
-								'ErrorMessage': errors.array(),
-								'ToDo': ToDo,
-								'UserCategories': UserCategories,
-							});
-					}
-					ToDo.findOne({ where: { name: req.body.taskName } })
-						.then(doesTaskExists =>
+						const errors = validationResult(req);
+						if(!errors.isEmpty())
 						{
-							if(doesTaskExists)
-							{
-								return res.render('index',
-									{
-										'ErrorMessage':
-										[
-											{
-												'param': 'Task',
-												'msg': 'allready exists',
-											},
-										],
-										'ToDo': ToDo,
-										'UserCategories': UserCategories,
-									});
-							}
-							ToDo.create(
+							return res.render('index',
 								{
-									uid: SesData[sid].Account.ID,
-									name: req.body.taskName,
-									catid: req.body.catID,
-								}
-							).then(() =>
+									'ErrorMessage': errors.array(),
+									'ToDo': ToDo,
+									'UserCategories': UserCategoriesAll,
+								});
+						}
+						ToDo.findOne({ where: { name: req.body.taskName } })
+							.then(doesTaskExists =>
 							{
-								ToDo.findAll({ where: { uid: SesData[sid].Account.ID }, order: ['name'] })
-									.then(NewToDo =>
+								if(doesTaskExists)
+								{
+									return res.render('index',
+										{
+											'ErrorMessage':
+											[
+												{
+													'param': 'Task',
+													'msg': 'allready exists',
+												},
+											],
+											'ToDo': ToDo,
+											'UserCategories': UserCategoriesAll,
+										});
+								}
+								ToDo.create(
 									{
-										return res.render('index',
-											{
-												'SuccessMessage': 'The given todo was created successfully',
-												'ToDo': NewToDo,
-												'UserCategories': UserCategories,
-											});
-									});
+										uid: SesData[sid].Account.ID,
+										name: req.body.taskName,
+										catid: req.body.catID,
+									}
+								).then(() =>
+								{
+									ToDo.findAll({ where: { uid: SesData[sid].Account.ID }, order: ['name'] })
+										.then(NewToDo =>
+										{
+											return res.render('index',
+												{
+													'SuccessMessage': 'The given todo was created successfully',
+													'ToDo': NewToDo,
+													'UserCategories': UserCategoriesAll,
+												});
+										});
+								});
 							});
-						});
-					// return res.render('index', { 'UserCategories': UserCategories });
-				});
+						// return res.render('index', { 'UserCategories': UserCategories });
+					});
 			});
 	});
 
